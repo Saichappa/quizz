@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My love Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; background-color: #f4f4f9; }
+        .quiz-container { background: rgb(168, 162, 248); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; margin-top: 50px; }
+        .option-btn { display: block; width: 100%; padding: 10px; margin: 8px 0; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: #fff; transition: 0.3s; }
+        .option-btn:hover {font-weight: bold; background: #b660a1; }
+        .correct { background-color: #23b445 !important; border-color: #23b445 !important; }
+        .incorrect { background-color: #f13a49 !important; border-color: #f13a49 !important; }
+        #next-btn { margin-top: 15px; padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; display: none; }
+        #score-area { font-weight: bold; margin-bottom: 10px; color: #333; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="score-area"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077035.png" alt="heart" width="20">
+       
+        your score: 0</div>
+    <div id="quiz">
+        <h2 id="question">Question Text</h2>
+        <div id="answer-buttons">
+            <!-- Buttons will be generated here -->
+        </div>
+        <button id="next-btn">Next Question</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "when did our Journey started 🫣👣👣?", options: ["poyina janma nundi 😁", "march 14,2023", "Brahma devudu manalni chesinappati nundi 😉"], correct: 2 },
+        { q: "What do I like most about you??", options: ["your smile😍", "your eyes👀", "your batta thala🤥", "All of the above"], correct: 3 },
+        { q: "If we go on a date, what will we do first??", options: [" Talk for hours", "Eat together", "Take selfies","Forget the world 💫"], correct: 3 },
+        { q: "The biggest lie here is:", options: [" I don’t miss you", "  I’m not thinking about you", " You’re not special", "All are lies 😌"], correct: 3 },
+        { q: "What’s your effect on me?", options: ["Heartbeat increases", " Mood improves", "System error: too cute 😵‍💫", "I can’t stop thinking about you"], correct: 2 }
+        
+        
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const answerButtonsEl = document.getElementById('answer-buttons');
+    const nextBtn = document.getElementById('next-btn');
+    const scoreArea = document.getElementById('score-area');
+
+    function loadQuestion() {
+        resetState();
+        let currentQuestion = questions[currentIdx];
+        questionEl.innerText = currentQuestion.q;
+
+        currentQuestion.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.innerText = option;
+            button.classList.add('option-btn');
+            button.onclick = () => selectAnswer(button, index === currentQuestion.correct);
+            answerButtonsEl.appendChild(button);
+        });
+    }
+
+    function resetState() {
+        nextBtn.style.display = 'none';
+        while (answerButtonsEl.firstChild) {
+            answerButtonsEl.removeChild(answerButtonsEl.firstChild);
+        }
+    }
+
+    function selectAnswer(button, isCorrect) {
+        if (isCorrect) {
+            button.classList.add('correct');
+            score++;
+            scoreArea.innerText = `Score: ${score}`;
+        } else {
+            button.classList.add('incorrect');
+            // Highlight the correct answer even if the user failed
+            const correctIdx = questions[currentIdx].correct;
+            answerButtonsEl.children[correctIdx].classList.add('correct');
+        }
+        
+        // Disable all buttons after selection
+        Array.from(answerButtonsEl.children).forEach(btn => btn.disabled = true);
+        nextBtn.style.display = 'block';
+    }
+
+    nextBtn.addEventListener('click', () => {
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            loadQuestion();
+        } else {
+            questionEl.innerText = "My test completed!!";
+            answerButtonsEl.innerHTML = `This is your score ${score} out of ${questions.length}`;
+            nextBtn.style.display = 'none';
+        }
+    });
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
